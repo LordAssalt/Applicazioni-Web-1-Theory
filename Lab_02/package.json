@@ -1,0 +1,15 @@
+{
+  "name": "ex1.2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ex1.2.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alexy",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.10.8",
+    "sqlite3": "^5.0.2"
+  }
+}
