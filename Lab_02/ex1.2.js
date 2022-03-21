@@ -73,7 +73,7 @@ async function allFilms() {
 async function favFilms(){
     return new Promise( (resolve,reject)=>{
         db.all('SELECT * FROM films WHERE favorite=TRUE', (err,rows)=>{
-            if(err) throw err;
+            if(err) reject(err);
             else {
                 const ListOfFilm = new FilmList();
                 for (let x of rows){
@@ -95,7 +95,7 @@ async function watchedToday(){
     return new Promise( (resolve,reject) => {
         const today=dayjs().format('YYYY-MM-DD');
         db.all('SELECT * FROM films WHERE watchdate= ?', today, (err,rows)=>{
-            if(err) throw err;
+            if(err) reject(err);
             else {
                 const ListOfFilm = new FilmList();
                 for (let x of rows){
@@ -117,7 +117,7 @@ async function watchDate(date){
     return new Promise( (resolve,reject)=>{
         const data=dayjs(date).format('YYYY-MM-DD');
         db.all('SELECT * FROM films WHERE watchdate= ?', data, (err,rows)=>{
-            if(err) throw err;
+            if(err) reject(err);
             else {
                 const ListOfFilm = new FilmList();
                 for (let x of rows){
@@ -139,7 +139,7 @@ async function watchDate(date){
 async function filmRate(rating){
     return new Promise ((resolve,reject)=>{
         db.all('SELECT * FROM films WHERE rating > ?',rating, (err,rows)=>{
-            if(err) throw err;
+            if(err) reject(err);
             else {
                 const ListOfFilm = new FilmList();
                 for (let x of rows){
@@ -160,7 +160,7 @@ async function filmRate(rating){
 async function filmName(name){
     return new Promise((resolve,reject)=>{
         db.all('SELECT * FROM films WHERE title = ?',name, (err,rows)=>{
-            if(err) throw err;
+            if(err) reject(err);
             else {
                 const ListOfFilm = new FilmList();
                 for (let x of rows){
@@ -184,7 +184,7 @@ async function insertFilm(film){
         data=dayjs(film.date).format('YYYY-MM-DD');
         rate=film.rating;
         db.run('INSERT INTO films (title,watchdate,rating) VALUES(?,?,?)',title,data,rate,(err)=>{
-                if(err) throw (err)
+                if(err) reject(err);
                 else resolve('Done')
         })
     })
@@ -193,7 +193,7 @@ async function insertFilm(film){
 async function deleteFilm(filmid){
     return new Promise ((resolve,reject)=>{
         db.run('DELETE FROM films WHERE id = ? ',filmid,(err)=>{
-                if(err) throw (err)
+                if(err) reject(err);
                 else resolve('Cancellation Done')
         })
     })
@@ -203,7 +203,7 @@ async function deleteDateFilm(filmdate){
     return new Promise ((resolve,reject)=>{
         data=dayjs(filmdate).format('YYYY-MM-DD');
         db.run('DELETE FROM films WHERE watchdate = ? ',data,(err)=>{
-                if(err) throw (err)
+                if(err) reject(err);
                 else resolve('Cancellation Done')
         })
     })
