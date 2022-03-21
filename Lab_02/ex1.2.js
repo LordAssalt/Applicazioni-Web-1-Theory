@@ -47,176 +47,176 @@ function FilmList (){
         console.log("-----------------------------");
     }
 
-}
-
-async function allFilms() {
-    return new Promise( (resolve,reject)=>{
-        db.all('SELECT * FROM films', (err,rows)=>{
-            if(err) reject(err)
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+    this.allFilms  = async() => {
+        return new Promise( (resolve,reject)=>{
+            db.all('SELECT * FROM films', (err,rows)=>{
+                if(err) reject(err)
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
                     }
-                    ListOfFilm.addNewFilm(f1);
+                    resolve(ListOfFilm);
                 }
-                resolve(ListOfFilm);
-            }
+            });
         });
-    });
-}
+    }
 
-async function favFilms(){
-    return new Promise( (resolve,reject)=>{
-        db.all('SELECT * FROM films WHERE favorite=TRUE', (err,rows)=>{
-            if(err) reject(err);
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
-                    }
-                    ListOfFilm.addNewFilm(f1);
-                }
-                resolve(ListOfFilm);
-            }
-        })
-    })
-}
-
-async function watchedToday(){
-    return new Promise( (resolve,reject) => {
-        const today=dayjs().format('YYYY-MM-DD');
-        db.all('SELECT * FROM films WHERE watchdate= ?', today, (err,rows)=>{
-            if(err) reject(err);
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
-                    }
-                    ListOfFilm.addNewFilm(f1);
-                }
-                resolve(ListOfFilm);
-            }
-        })
-    })
-}
-
-async function watchDate(date){
-    return new Promise( (resolve,reject)=>{
-        const data=dayjs(date).format('YYYY-MM-DD');
-        db.all('SELECT * FROM films WHERE watchdate= ?', data, (err,rows)=>{
-            if(err) reject(err);
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
-                    }
-                    ListOfFilm.addNewFilm(f1);
-                }
-                resolve(ListOfFilm);
-            }
-        })
-
-    })
-}
-
-async function filmRate(rating){
-    return new Promise ((resolve,reject)=>{
-        db.all('SELECT * FROM films WHERE rating > ?',rating, (err,rows)=>{
-            if(err) reject(err);
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
-                    }
-                    ListOfFilm.addNewFilm(f1);
-                }
-                resolve(ListOfFilm);
-            }
-        })
-    })
-}
-
-async function filmName(name){
-    return new Promise((resolve,reject)=>{
-        db.all('SELECT * FROM films WHERE title = ?',name, (err,rows)=>{
-            if(err) reject(err);
-            else {
-                const ListOfFilm = new FilmList();
-                for (let x of rows){
-                    let f1;
-                    if(x["watchdate"]==null){
-                       f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
-                    }else{
-                       f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
-                    }
-                    ListOfFilm.addNewFilm(f1);
-                }
-                resolve(ListOfFilm);
-            }
-        })
-    })
-}
-
-async function insertFilm(film){
-    return new Promise ((resolve,reject)=>{
-        title=film.title;
-        data=dayjs(film.date).format('YYYY-MM-DD');
-        rate=film.rating;
-        db.run('INSERT INTO films (title,watchdate,rating) VALUES(?,?,?)',title,data,rate,(err)=>{
+    this.favFilms = async() =>{
+        return new Promise( (resolve,reject)=>{
+            db.all('SELECT * FROM films WHERE favorite=TRUE', (err,rows)=>{
                 if(err) reject(err);
-                else resolve('Done')
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
+                    }
+                    resolve(ListOfFilm);
+                }
+            })
         })
-    })
-}
+    }
 
-async function deleteFilm(filmid){
-    return new Promise ((resolve,reject)=>{
-        db.run('DELETE FROM films WHERE id = ? ',filmid,(err)=>{
+    this.watchedToday = async() =>{
+        return new Promise( (resolve,reject) => {
+            const today=dayjs().format('YYYY-MM-DD');
+            db.all('SELECT * FROM films WHERE watchdate= ?', today, (err,rows)=>{
                 if(err) reject(err);
-                else resolve('Cancellation Done')
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
+                    }
+                    resolve(ListOfFilm);
+                }
+            })
         })
-    })
-}
+    }
 
-async function deleteDateFilm(filmdate){
-    return new Promise ((resolve,reject)=>{
-        data=dayjs(filmdate).format('YYYY-MM-DD');
-        db.run('DELETE FROM films WHERE watchdate = ? ',data,(err)=>{
+    this.watchDate = async(date) =>{
+        return new Promise( (resolve,reject)=>{
+            const data=dayjs(date).format('YYYY-MM-DD');
+            db.all('SELECT * FROM films WHERE watchdate= ?', data, (err,rows)=>{
                 if(err) reject(err);
-                else resolve('Cancellation Done')
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
+                    }
+                    resolve(ListOfFilm);
+                }
+            })
         })
-    })
+    }
+
+    this.filmRate = async(rating)=>{
+        return new Promise ((resolve,reject)=>{
+            db.all('SELECT * FROM films WHERE rating > ?',rating, (err,rows)=>{
+                if(err) reject(err);
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
+                    }
+                    resolve(ListOfFilm);
+                }
+            })
+        })
+    }
+
+    this.filmName = async(name) =>{
+        return new Promise((resolve,reject)=>{
+            db.all('SELECT * FROM films WHERE title = ?',name, (err,rows)=>{
+                if(err) reject(err);
+                else {
+                    const ListOfFilm = new FilmList();
+                    for (let x of rows){
+                        let f1;
+                        if(x["watchdate"]==null){
+                           f1 = new Film (x["id"],x["title"],x["favorite"], "Jan 1 1970", x["rating"]);
+                        }else{
+                           f1 = new Film (x["id"],x["title"],x["favorite"], x["watchdate"], x["rating"]);
+                        }
+                        ListOfFilm.addNewFilm(f1);
+                    }
+                    resolve(ListOfFilm);
+                }
+            })
+        })
+    }
+
+    this.insertFilm = async(film) =>{
+        return new Promise ((resolve,reject)=>{
+            title=film.title;
+            data=dayjs(film.date).format('YYYY-MM-DD');
+            rate=film.rating;
+            db.run('INSERT INTO films (title,watchdate,rating) VALUES(?,?,?)',title,data,rate,(err)=>{
+                    if(err) reject(err);
+                    else resolve('Done')
+            })
+        })
+    }
+
+    this.deleteFilm = async(filmid)=>{
+        return new Promise ((resolve,reject)=>{
+            db.run('DELETE FROM films WHERE id = ? ',filmid,(err)=>{
+                    if(err) reject(err);
+                    else resolve('Cancellation Done')
+            })
+        })
+    }
+
+    this.deleteDateFilm = async(filmdate)=>{
+        return new Promise ((resolve,reject)=>{
+            data=dayjs(filmdate).format('YYYY-MM-DD');
+            db.run('DELETE FROM films WHERE watchdate = ? ',data,(err)=>{
+                    if(err) reject(err);
+                    else resolve('Cancellation Done')
+            })
+        })
+    }
+
 }
 
 
 async function main (){
+    const ListOfFilm = new FilmList();
     const f1 = new Film (1,"Avengers",true,"March 15 2022",5);
-    await watchDate("2022/03/11").then((list)=> {list.print()});
-    await filmName("Star Wars").then((list)=>{list.print()});
-    await insertFilm(f1).then(console.log);
-    await deleteFilm(7).then(console.log);
-    await deleteDateFilm("2022/03/15").then(console.log);;
+    await ListOfFilm.watchDate("2022/03/11").then((list)=> {list.print()});
+    await ListOfFilm.filmName("Star Wars").then((list)=>{list.print()});
+    await ListOfFilm.insertFilm(f1).then(console.log);
+    await ListOfFilm.deleteFilm(7).then(console.log);
+    await ListOfFilm.deleteDateFilm("2022/03/15").then(console.log);;
     return "Tutto Ok";
 }
 
