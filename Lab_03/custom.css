@@ -1,0 +1,30 @@
+.red-box{
+    background-color: red;
+}
+
+.blue-box{
+    background-color: cornflowerblue;
+}
+
+.grey-box{
+    background-color: rgb(242, 236, 236);
+}
+
+.clicked {
+    background-color: blue;
+}
+
+.btn-default{
+    background-color: white;
+}
+
+
+.checked {
+    color : yellow;
+    font-size : 20px;
+}
+.unchecked {
+    font-size : 20px;
+}
+
+
