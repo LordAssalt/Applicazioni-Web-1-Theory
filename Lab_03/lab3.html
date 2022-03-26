@@ -14,8 +14,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
-    <div class="contaier-fluid p-0">
+<body class="d-flex flex-column vh-100">
+    <!-- this allow to extend the vertical colum to the entire page-->
+    <div class="contaier-fluid p-0 flex-grow-1">
         <div class="row blue-box m-0">
             <nav class="navbar navbar-light blue-box">
                 <div class="container-fluid">
@@ -29,7 +30,6 @@
                     </a>
                     <form class="d-flex justify-content-center">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-success" type="submit">Search</button>
                     </form>
 
 
@@ -44,8 +44,8 @@
             </nav>
         </div>
 
-        <div class="row m-0">
-            <div class="col-4 grey-box p-4">
+        <div class="row m-0 h-100">
+            <div class="col-4 grey-box p-4 sidebar">
 
                 <div class="list-group list-group-flush">
                     <button type="button"
@@ -88,7 +88,8 @@
                                     </div>
                                 </td>
                                 <td>11/03/2022</td>
-                                <td><!-- To display checked star rating icons -->
+                                <td>
+                                    <!-- To display checked star rating icons -->
                                     <span class="fa fa-star checked"></span>
                                     <!-- To display unchecked star rating icons -->
                                     <span class="fa fa-star unchecked"></span>
@@ -110,7 +111,8 @@
                                     </div>
                                 </td>
                                 <td>11/03/2022</td>
-                                <td><!-- To display checked star rating icons -->
+                                <td>
+                                    <!-- To display checked star rating icons -->
                                     <span class="fa fa-star checked"></span>
                                     <span class="fa fa-star checked"></span>
                                     <!-- To display unchecked star rating icons -->
@@ -151,7 +153,8 @@
                                     </div>
                                 </td>
                                 <td>11/03/2022</td>
-                                <td><!-- To display checked star rating icons -->
+                                <td>
+                                    <!-- To display checked star rating icons -->
                                     <span class="fa fa-star checked"></span>
                                     <span class="fa fa-star checked"></span>
                                     <span class="fa fa-star checked"></span>
@@ -184,6 +187,9 @@
                         </table>
                     </div>
                 </main>
+                <button type="button" class="btn btn-primary btn-circle btn-xl" >
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
     </div>
