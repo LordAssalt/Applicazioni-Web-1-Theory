@@ -32,6 +32,26 @@ function FilmList (){
         }
         console.log("-----------------------------");
     }
+    
+    this.favFilms = () => {
+        let new_array = []
+        for (film of this.list) {
+            if (film.favorites == true) {
+                new_array.push(film);
+            }
+        }
+        return new_array;
+    }
+
+    this.bestFilms = () => {
+        let new_array = []
+        for (film of this.list) {
+            if (film.rating == 5) {
+                new_array.push(film);
+            }
+        }
+        return new_array;
+    }
 
 }
 

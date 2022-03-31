@@ -27,7 +27,7 @@ function FilmList (){
         new_array.sort( (a,b) => {
             const date1=dayjs(a.date);
             const date2=dayjs(b.date);
-            return date1.diff(b.date);
+            return date1.diff(date2);
         });
 
         console.log("-----------------------------");
