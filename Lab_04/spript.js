@@ -77,6 +77,14 @@ function FilmList() {
 
 }
 
+function setAsActive(id){
+    const mod = document.getElementById(id).classList.add('active');
+}
+
+function setAsNonActive(id){
+    const mod = document.getElementById(id).classList.remove('active');
+}
+
 function deleteButtonsReload() {
     rows = document.querySelectorAll('table tr');
     for (let row of rows) {
@@ -173,30 +181,54 @@ window.addEventListener("load", event => {
     document.getElementById('all').addEventListener("click", event => {
         deleteAllRows();
         loadAllFilms();
-        
+        setAsActive("all");
+        setAsNonActive("fav");
+        setAsNonActive("best");
+        setAsNonActive("lastmonth");
+        setAsNonActive("unseen");
         deleteButtonsReload();
     })
 
     document.getElementById('fav').addEventListener("click", event => {
         deleteAllRows();
         loadFavFilms();
+        setAsActive("fav");
+        setAsNonActive("all");
+        setAsNonActive("best");
+        setAsNonActive("lastmonth");
+        setAsNonActive("unseen");
         deleteButtonsReload();
     })
 
     document.getElementById('best').addEventListener("click", event => {
         deleteAllRows();
         loadBestFilms();
+        setAsActive("best");
+        setAsNonActive("fav");
+        setAsNonActive("all");
+        setAsNonActive("lastmonth");
+        setAsNonActive("unseen");
         deleteButtonsReload();
     })
 
     document.getElementById('lastmonth').addEventListener("click", event => {
         deleteAllRows();
         loadLastMonthFilms();
+        setAsActive("lastmonth");
+        setAsNonActive("fav");
+        setAsNonActive("best");
+        setAsNonActive("all");
+        setAsNonActive("unseen");
         deleteButtonsReload();
     })
 
     document.getElementById('unseen').addEventListener("click", event => {
         deleteAllRows();
+        setAsActive("unseen");
+        setAsNonActive("fav");
+        setAsNonActive("best");
+        setAsNonActive("lastmonth");
+        setAsNonActive("all");
         deleteButtonsReload();
     })
 
