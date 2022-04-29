@@ -1,0 +1,10 @@
+App
+    h1
+    ExamScores
+        ExamTable
+            n*ExamRow
+                ExamData
+                    3*td
+                ExamActions
+                    1*Button
+        ExamForm
