@@ -72,8 +72,9 @@ function ExamData(props) {
 }
 
 function ExamActions(props) {
+  const navigate=useNavigate();
   return (<td>
-    <Button className='mx-3' variant='warning' onClick={props.editExam} >
+    <Button className='mx-3' variant='warning' onClick={()=>{navigate(`/edit/${props.code}`)}} >
       <i className='bi bi-pencil'></i></Button>
     <Button variant='danger' onClick={() => { props.deleteExam(props.code) }}
     ><i className='bi bi-trash3'></i></Button>

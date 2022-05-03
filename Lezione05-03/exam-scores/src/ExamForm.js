@@ -1,22 +1,22 @@
 import {Button, Alert, Form, Container, Col, Row} from 'react-bootstrap';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 function ExamForm(props) {
-  const [code, setCode] = useState(props.examToEdit ? props.examToEdit.code : '');
-  const [name, setName] = useState(props.examToEdit ? props.examToEdit.name : '');
-  const [score, setScore] = useState(props.examToEdit ? props.examToEdit.score : 18);
-  const [date, setDate] = useState(props.examToEdit ? props.examToEdit.date : dayjs());
+  const { examId } = useParams();
+  const examToEdit = props.exams.find( (ex) => ex.code === examId );
   const navigate=useNavigate();
+  const [code, setCode] = useState(props.examToEdit ? examToEdit.code : '');
+  const [name, setName] = useState(props.examToEdit ? examToEdit.name : '');
+  const [score, setScore] = useState(props.examToEdit ? examToEdit.score : 18);
+  const [date, setDate] = useState(props.examToEdit ? examToEdit.date : dayjs());
 
-  const [errorMsg, setErrorMsg] = useState('');  // stringa vuota '' = non c'e' errore
+  const [errorMsg, setErrorMsg] = useState(''); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // validation
-    // esempio: che non ci siano spazi nel nome del corso
     if (code.includes(' ')) {
       setErrorMsg('Il codice del corso non deve contenere spazi');
     } else if (name.trim().length === 0) {
@@ -36,7 +36,6 @@ function ExamForm(props) {
     setScore(val);
     /* Careful with validation: either validate at the end in handleSubmit, or when focus is lost,
        or consider that partial input may be invalid (difficult)
-
         if (val<18)
           setScore(18);
         else if (val>31)
@@ -52,7 +51,9 @@ function ExamForm(props) {
       <Container>
       <Row>
       <Col>
-      <h1>Form</h1>
+      <h1>Form code:{examId}</h1>
+      </Col>
+      </Row>
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label>Code</Form.Label>
@@ -73,8 +74,6 @@ function ExamForm(props) {
         <Button type='submit' >Save</Button>
         <Button onClick={()=>navigate('/')} variant='secondary' >Cancel</Button>
       </Form>
-      </Col>
-      </Row>
       </Container>
     </>
   );
