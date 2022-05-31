@@ -4,11 +4,10 @@ import { Container, Row, Col, Alert } from 'react-bootstrap';
 //import dayjs from 'dayjs';
 import { ExamScores } from './ExamScores';
 import ExamForm from './ExamForm';
+import { LoginForm, LogoutButton } from './LoginComponents';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API from './API';
-import { LoginForm,LogoutButton } from './loginComponents';
-
 
 /*
 const fakeExams = [
@@ -31,12 +30,29 @@ function App2() {
   const [courses, setCourses] = useState([]);
   const [dirty, setDirty] = useState(true);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [loggedIn, setLoggedIn]=useState(false);
-  const [user,setUser]=useState({});
+  const [loggedIn, setLoggedIn] = useState(false);  // no user is logged in when app loads
+  const [user, setUser] = useState({});
+  const [message, setMessage] = useState('');
 
   const navigate = useNavigate();
 
+  useEffect(()=> {
+    const checkAuth = async() => {
+      try {
+        // here you have the user info, if already logged in
+        // TODO: store them somewhere and use them, if needed
+        const user = await API.getUserInfo();
+        setLoggedIn(true);
+        setUser(user);
+      } catch(err) {
+        handleError(err);
+      }
+    };
+    checkAuth();
+  }, []);
+
   useEffect(() => {
+    if (loggedIn)
       API.getAllCourses()
         .then( (courses) => { setCourses(courses); setDirty(true); } )
         .catch( err => handleError(err))
@@ -52,7 +68,7 @@ function App2() {
           setDirty(false);
           setInitialLoading(false);
         })
-        .catch(err => {console.log(err)})
+        .catch(err => console.log(err))
     }
   }, [courses.length, dirty])
 
@@ -86,18 +102,22 @@ function App2() {
       .catch( err => handleError(err) );
   }
 
-  const doLogin=(credentials)=>{
+  const doLogIn = (credentials) => {
     API.logIn(credentials)
-     .then(user=>{
-       setLoggedIn(true);
-       setUser(user);
-       navigate('/');
-     })
-     .catch(err => handleError(err))
+      .then( user => {
+        setLoggedIn(true);
+        setUser(user);
+        setMessage('');
+        navigate('/');
+      })
+      .catch(err => {
+        setMessage(err);
+      }
+        )
   }
 
-  const doLogOut= async()=>{
-    await API.doLogOut();
+  const doLogOut = async () => {
+    await API.logOut();
     setLoggedIn(false);
     setUser({});
     setCourses([]);
@@ -108,9 +128,10 @@ function App2() {
     <>
       <Container>
         <Row><Col>
-        {loggedIn? <LogoutButton logout={doLogOut} user={user}/>:false}
+        {loggedIn ? <LogoutButton logout={doLogOut} user={user} /> : false}
         </Col></Row>
         <Row><Col>
+        {message ? <Alert variant='danger' onClose={() => setMessage('')} dismissible>{message}</Alert> : false}
         </Col></Row>
       </Container>
       <Routes>
@@ -118,11 +139,11 @@ function App2() {
             loggedIn ? (
             initialLoading ? <Loading /> :
               <ExamScores exams={exams} deleteExam={deleteExam} />
-            ) : <Navigate to='/login'/>
+            ) : <Navigate to='/login' />
           } />
+        <Route path='/login' element={loggedIn ? <Navigate to='/' /> : <LoginForm login={doLogIn} />} />
         <Route path='/add' element={<ExamForm exams={exams} courses={courses} addExam={addExam} />} />
         <Route path='/edit/:examId' element={<ExamForm addExam={updateExam} courses={courses}  exams={exams} />} />
-        <Route path='/login' element={< LoginForm login={doLogin}/>} />
       </Routes>
     </>
   );

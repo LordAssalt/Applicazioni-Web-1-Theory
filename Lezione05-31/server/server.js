@@ -10,10 +10,6 @@ const session = require('express-session'); // enable sessions
 const userDao = require('./user-dao'); // module for accessing the users in the DB
 const cors = require('cors');
 
-
-
-
-
 /*** Set up Passport ***/
 // set up the "username and password" login strategy
 // by setting a function to verify username and password
@@ -31,21 +27,19 @@ passport.use(new LocalStrategy(
 // serialize and de-serialize the user (user object <-> session)
 // we serialize the user id and we store it in the session: the session is very small in this way
 passport.serializeUser((user, done) => {
-  //console.log("serializeUser: user:" + JSON.stringify(user));
   done(null, user.id);
 });
 
 // starting from the data in the session, we extract the current (logged-in) user
 passport.deserializeUser((id, done) => {
-  //console.log("deserializeUser: id:" + id);
   userDao.getUserById(id)
     .then(user => {
-      //console.log("deserializeUser: user da db:" + JSON.stringify(user));
       done(null, user); // this will be available in req.user
     }).catch(err => {
       done(err, null);
     });
 });
+
 
 // init express
 const app = express();
@@ -60,27 +54,26 @@ const corsOptions = {
 };
 app.use(cors(corsOptions)); // NB: Usare solo per sviluppo e per l'esame! Altrimenti indicare dominio e porta corretti
 
-// set up the session
-app.use(session({
-  // by default, Passport uses a MemoryStore to keep track of the sessions
-  secret: 'a secret sentence not to share with anybody and anywhere, used to sign the session ID cookie',
-  resave: false,
-  saveUninitialized: false,
-}));
 
-// then, init passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-
-// TEMPORARY
+// custom middleware: check if a given request is coming from an authenticated user
 const isLoggedIn = (req, res, next) => {
   if(req.isAuthenticated())
     return next();
   
   return res.status(401).json({ error: 'not authenticated'});
 }
+
+// set up the session
+app.use(session({
+  // by default, Passport uses a MemoryStore to keep track of the sessions
+  secret: 'a secret sentence not to share with anybody and anywhere, used to sign the session ID cookie',
+  resave: false,
+  saveUninitialized: false 
+}));
+
+// then, init passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 /*** APIs ***/
@@ -112,7 +105,7 @@ app.get('/api/courses/:code', isLoggedIn, async (req, res) => {
 // GET /api/exams
 app.get('/api/exams', isLoggedIn, async (req, res) => {
   try {
-    const exams = await dao.listExamsWithName(1);
+    const exams = await dao.listExamsWithName(req.user.id);
     //res.json(exams);
     setTimeout( ()=> res.json(exams), 1000);
   } catch(err) {
@@ -140,7 +133,7 @@ app.post('/api/exams', isLoggedIn, [
 
   try {
     // You may want to check that the course code exists before doing the creation
-    await dao.createExam(exam, 1);   // It is WRONG to use something different from req.user.id
+    await dao.createExam(exam, req.user.id);   // It is WRONG to use something different from req.user.id
     // In case that a new ID is created and you want to use it, take it from await, and return it to client.
     res.status(201).end();
   } catch(err) {
@@ -164,7 +157,7 @@ app.put('/api/exams/:code', isLoggedIn, [
 
   // you can also check here if the code passed in the URL matches with the code in req.body
   try {
-    await dao.updateExam(exam, 1);
+    await dao.updateExam(exam, req.user.id);
     res.status(200).end();
   } catch(err) {
     console.log(err);
@@ -176,7 +169,7 @@ app.put('/api/exams/:code', isLoggedIn, [
 // DELETE /api/exams/<code>
 app.delete('/api/exams/:code', isLoggedIn, async (req, res) => {
   try {
-    await dao.deleteExam(req.params.code, 1);
+    await dao.deleteExam(req.params.code, req.user.id);
     res.status(204).end();
   } catch(err) {
     console.log(err);
